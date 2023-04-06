@@ -1,11 +1,11 @@
 const express = require('express');
-const crypto = require('crypto');
+const loginMiddleware = require('../middlewares/loginMiddleware');
+const token = require('../token');
 
 const loginRouter = express.Router();
 
 // requisito 03
-const token = () => crypto.randomBytes(8).toString('hex');
-loginRouter.post('/', (req, res) => {
+loginRouter.post('/', loginMiddleware, (_req, res) => {
     const newToken = token();
     res.status(200).json({ token: newToken });
 });
