@@ -46,4 +46,23 @@ talkerRouter.post('/',
         fs.writeFileSync(file, JSON.stringify(talkers));
         res.status(201).json(newTalker);
 });
+
+// requisito 06
+talkerRouter.put('/:id',
+    tokenMiddleware,
+    nameMiddleware,
+    ageMiddleware,
+    talkMiddleware,
+    watchedAtMiddleware,
+    rateMiddleware,
+    (req, res) => {
+        const { name, age, talk: { watchedAt, rate } } = req.body;
+        const { id } = req.params;
+        const data = fs.readFileSync(file, 'utf8');
+        const talkers = JSON.parse(data);
+        const talkerId = talkers.findIndex((t) => t.id === Number(id));
+        talkers[talkerId] = { ...talkers[talkerId], name, age, talk: { watchedAt, rate } };
+        fs.writeFileSync(file, JSON.stringify(talkers));
+        res.status(200).json(talkers[talkerId]);
+});
 module.exports = talkerRouter;
