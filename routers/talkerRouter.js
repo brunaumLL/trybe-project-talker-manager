@@ -6,6 +6,7 @@ const ageMiddleware = require('../middlewares/ageMiddleware');
 const talkMiddleware = require('../middlewares/talkMiddleware');
 const watchedAtMiddleware = require('../middlewares/watchedAtMiddleware');
 const rateMiddleware = require('../middlewares/rateMiddleware');
+const tolkenMiddleware = require('../middlewares/tolkenMiddleware');
 
 const talkerRouter = express.Router();
 const file = 'talker.json';
@@ -65,4 +66,15 @@ talkerRouter.put('/:id',
         fs.writeFileSync(file, JSON.stringify(talkers));
         res.status(200).json(talkers[talkerId]);
 });
+
+// requisito 07
+talkerRouter.delete('/:id', tolkenMiddleware, (req, res) => {
+    const { id } = req.params;
+    const data = fs.readFileSync(file, 'utf8');
+    const talkers = JSON.parse(data);
+    const newTalkers = talkers.filter((t) => t.id !== Number(id));
+    fs.writeFileSync(file, JSON.stringify(newTalkers));
+    res.status(204).end();
+});
+
 module.exports = talkerRouter;
