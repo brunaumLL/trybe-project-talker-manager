@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-// requisito 1 
+// requisito 01 
 app.use('/talker', talkerRouter);
 
 // não remova esse endpoint, e para o avaliador funcionar
