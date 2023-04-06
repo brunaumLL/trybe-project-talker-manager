@@ -11,6 +11,15 @@ const tolkenMiddleware = require('../middlewares/tolkenMiddleware');
 const talkerRouter = express.Router();
 const file = 'talker.json';
 
+// requisito 08
+talkerRouter.get('/search', tolkenMiddleware, (req, res) => {
+    const { q } = req.query;
+    const data = fs.readFileSync(file, 'utf8');
+    const talkers = JSON.parse(data);
+    const filterTalkers = talkers.filter((t) => t.name.includes(q));
+    res.status(200).json(filterTalkers);
+});
+
 // requisito 01
 talkerRouter.get('/', (_req, res) => {
     const data = fs.readFileSync(file, 'utf8');
