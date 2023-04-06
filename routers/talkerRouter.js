@@ -1,5 +1,11 @@
 const express = require('express');
 const fs = require('fs');
+const tokenMiddleware = require('../middlewares/tolkenMiddleware');
+const nameMiddleware = require('../middlewares/nameMiddleware');
+const ageMiddleware = require('../middlewares/ageMiddleware');
+const talkMiddleware = require('../middlewares/talkMiddleware');
+const watchedAtMiddleware = require('../middlewares/watchedAtMiddleware');
+const rateMiddleware = require('../middlewares/rateMiddleware');
 
 const talkerRouter = express.Router();
 const file = 'talker.json';
@@ -22,4 +28,22 @@ talkerRouter.get('/:id', (req, res) => {
     res.status(200).json(talkerId);
 });
 
+// requisito 05
+talkerRouter.post('/',
+    tokenMiddleware,
+    nameMiddleware,
+    ageMiddleware,
+    talkMiddleware,
+    watchedAtMiddleware,
+    rateMiddleware,
+    (req, res) => {
+        const { name, age, talk: { watchedAt, rate } } = req.body;
+        const data = fs.readFileSync(file, 'utf8');
+        const talkers = JSON.parse(data);
+        const id = talkers.length + 1;
+        const newTalker = { id, name, age, talk: { watchedAt, rate } };
+        talkers.push(newTalker);
+        fs.writeFileSync(file, JSON.stringify(talkers));
+        res.status(201).json(newTalker);
+});
 module.exports = talkerRouter;
